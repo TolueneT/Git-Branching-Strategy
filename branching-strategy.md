@@ -13,7 +13,7 @@
 
 # **Introduction**
 
-This document defines the Git branching strategy and CI/CD workflow for a microservices-based application. The objective is to ensure safe code integration, automated testing, and controlled deployments across development, staging, and production environments.
+This document defines the Git branching strategy and CI/CD workflow for the TESXpress microservices e-commerce platform. The objective is to enable safe collaboration among developers, enforce automated testing, and support reliable deployments across development, staging, and production environments.
 
 The system will use:
 
@@ -44,7 +44,7 @@ The list of services includes:
 
 # **Define Repository Structure**
 
-This section explain how the code repository is going to be organized, because, a monorepo is used to simplify dependency management and maintain consistent CI/CD workflows across services.
+The repository follows a monorepo architecture, where all microservices are stored in a single repository. This simplifies dependency management, enables centralized CI/CD pipelines, and ensures consistent deployment workflows across services.
 
 ```
 TESXpress-platform/
@@ -59,9 +59,11 @@ TESXpress-platform/
      └── kubernetes-manifests
 ```
 
+The infrastructure directory contains Kubernetes manifests and deployment configurations used by the CI/CD pipeline.
+
 # **Design the Branching Strategy**
 
-The project uses a GitFlow branching strategy.
+GitFlow was chosen because it provides a structured workflow for teams working on multiple features simultaneously. It separates ongoing development from production-ready code and provides dedicated branches for releases and hotfixes.
 
 **Main Branch**
 

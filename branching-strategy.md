@@ -151,13 +151,28 @@ Each pipeline run executes the following stages in order:
 2. **Install Dependencies** – installs all required packages
 3. **Run Unit Tests** – validates code correctness before building
 4. **Build Docker Image** – packages the application into a container
-5. **Push Image to Registry** – uploads the image to the container registry
+5. **Push Image to Registry** – After the Docker image is built, it is pushed to a container registry(Amazon Elastic Container Registry) where it becomes available for Kubernetes deployments.
 6. **Deploy to Kubernetes** – applies the updated manifests to the cluster
 
 ### Tools Used
 
 - **Docker** – builds and packages container images
 - **Kubernetes** – orchestrates and manages container deployments
+
+**Branch Protection Rules**
+
+The main branch is protected to prevent accidental or unreviewed changes.
+
+_Rules include:_
+
+- Pull request required
+- At least 2 code reviewers
+- All CI checks must pass
+- Direct pushes are disabled
+
+Configured in:
+
+- GitHub
 
 **Defining the Environments**
 Code is deployed to different environments depending on the stage of development:
@@ -168,7 +183,7 @@ Code is deployed to different environments depending on the stage of development
 | **Staging**    | Pre-production validation |
 | **Production** | Live system               |
 
-### Deployment Flow
+## **Deployment Flow**
 
 Code progresses through the following branches before reaching production:
 
@@ -176,7 +191,8 @@ Code progresses through the following branches before reaching production:
 feature → develop → release → main
 ```
 
-**The Release Workflow**
+## **The Release Workflow**
+
 Releases follow a structured workflow to ensure code is tested
 at every stage before reaching production:
 
@@ -191,7 +207,8 @@ at every stage before reaching production:
 9. **Merge to `main`** – approved release is merged into the main branch
 10. **Deploy to production** – final deployment to the live system
 
-**How production bugs are fixed**
+## **How production bugs are fixed**
+
 When a bug is discovered in production, it follows an expedited
 workflow that bypasses the normal release cycle:
 
@@ -217,7 +234,8 @@ main
  └──> Merge back to develop
 ```
 
-**Architecture Diagram**
+## **Architecture Diagram**
+
 The following flow represents the full lifecycle of code from
 development to production:
 
@@ -251,6 +269,35 @@ Merge to Main
     ▼
 Deploy to Production
 ```
+
+## **Deployment Architecture**
+
+The following shows how traffic flows from the internet
+through to individual microservices:
+
+```
+                          Internet
+                             │
+                             ▼
+                       Load Balancer
+                             │
+                             ▼
+                        API Gateway
+                             │
+          ┌──────────────────┼──────────────────┐
+          │                  │                  │
+          ▼                  ▼                  ▼
+     User Service      Product Service      Order Service
+                                                │
+                                    ┌───────────┴───────────┐
+                                    │                       │
+                                    ▼                       ▼
+                            Payment Service      Notification Service
+```
+
+Running in:
+
+- Kubernetes
 
 **Conclusion**
 
